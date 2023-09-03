@@ -1,0 +1,97 @@
+version: "3.8"
+
+services:
+  eclipse_mosquitto:
+    container_name: mqtt_container
+    image: eclipse-mosquitto:latest
+    ports:
+      - 1883:1883
+      - 8883:8883
+      - 9001:9001
+    volumes:
+      - D:\Shubham\Docker_Project\FINAL_MOSQUITTO_DOCKER\config:/mosquitto/config
+      - D:\Shubham\Docker_Project\FINAL_MOSQUITTO_DOCKER\data:/mosquitto/data
+    networks:
+      - mosquitto
+
+  mqtt-publisher:
+    container_name: publisher_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python /usr/src/application/publisher.py
+    depends_on:
+      - eclipse_mosquitto
+    networks:
+      - mosquitto
+
+  mqtt-subscriber:
+    container_name: subscriber_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python /usr/src/application/subscriber.py
+    depends_on:
+      - eclipse_mosquitto
+    networks:
+      - mosquitto
+    links:
+      - mongo_db
+
+  mongo_db:
+    container_name: mongodb_container
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    networks:
+      - mosquitto
+
+  fastapi-app:
+    image: fastapi
+    container_name: fastapi_container
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: D:\Shubham\Docker_Project\MQTT_MOSQUITTO_DOCKER
+        target: /usr/src/application
+    command: uvicorn src.main:app --proxy-headers --host 0.0.0.0 --port 80 --reload --reload-dir "/usr/src/application"
+    ports:
+      - "80:80"
+    links:
+      - mongo_db
+      - redis_db
+    networks:
+      - mosquitto
+
+  redis_db:
+    container_name: redis_container
+    image: redis:6.2
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    depends_on:
+      - mongo_db
+    links:
+      - mongo_db
+    networks:
+      - mosquitto
+
+  test_api:
+    container_name: testapi_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: pytest -s tests/test_main.py
+    depends_on:
+      - fastapi-app
+    networks:
+      - mosquitto
+
+networks:
+  mosquitto:
+    name: mosquitto
+    driver: bridge
