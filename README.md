@@ -37,7 +37,9 @@
 
 This flowchart outlines the basic steps involved in a project that combines these technologies.
 
-![My Image](flowchart.jpg)## * Project Description
+![My Image](flowchart.jpg)
+
+## * Project Description
 
 The project involves building a real-time messaging system using Mosquitto MQTT as the message broker. MQTT allows for lightweight and efficient communication between devices and applications.
 
