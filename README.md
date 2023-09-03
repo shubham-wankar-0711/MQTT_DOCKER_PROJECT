@@ -7,19 +7,26 @@
 
 4. [A detailed overview of each service is in the docker-compose.yml file]()
 
-    a. eclipse_mosquitto service  
-    b. mqtt-publisher service  
-    c. mqtt-subscriber service  
-    d. mongo_db service  
-    e. redis_db service  
-    f. fastapi-app service  
-    g. test_api service  
+    a. eclipse_mosquitto service
+   
+    b. mqtt-publisher service
+   
+    c. mqtt-subscriber service
+   
+    d. mongo_db service
+   
+    e. redis_db service
+   
+    f. fastapi-app service
+   
+    g. test_api service
+   
 
-5. [API Reference]()
-6. [Insight into the design choices you made and the rationale behind them]()
-7. [If you happen to encounter any ambiguities, please make informed assumptions and document them]()
-8. [Challenges Faced]()
-9. [Troubleshooting for Common Problems]()
+6. [API Reference]()
+7. [Insight into the design choices you made and the rationale behind them]()
+8. [If you happen to encounter any ambiguities, please make informed assumptions and document them]()
+9. [Challenges Faced]()
+10. [Troubleshooting for Common Problems]()
 
 
 
